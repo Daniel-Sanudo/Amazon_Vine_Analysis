@@ -120,3 +120,31 @@ ON paid_analysis.summary_type = unpaid_analysis.summary_type;
 -- Show the resulting analysis
 SELECT *
 FROM full_vine_analysis;
+
+-- Create new table to display results in a clearer way
+CREATE TABLE IF NOT EXISTS vine_summary (
+  vine_type TEXT,
+  total_review_count INTEGER,
+  five_star_review_count INTEGER,
+  five_star_percentage TEXT
+);
+
+-- Insert paid data into new summary
+INSERT INTO vine_summary
+SELECT
+	'Paid', 
+	fv.paid_review_count, 
+	fv.paid_five_star_review_count, 
+	fv.percentage_of_5_star_paid_reviews
+FROM full_vine_analysis AS fv;
+
+-- Insert unpaid data into new summary
+INSERT INTO vine_summary
+SELECT
+	'Unpaid', 
+	fv.unpaid_review_count, 
+	fv.unpaid_five_star_review_count, 
+	fv.percentage_of_5_star_unpaid_reviews
+FROM full_vine_analysis AS fv;
+
+SELECT * FROM vine_summary
